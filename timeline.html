@@ -84,6 +84,11 @@
         .post-button:hover {
             background-color: #0056b3;
         }
+
+        .image-preview {
+            max-width: 100%;
+            margin-top: 10px;
+        }
     </style>
     <title>Timeline Page</title>
 </head>
@@ -92,6 +97,7 @@
         <div class="create-post">
             <textarea id="newPost" placeholder="What's on your mind?"></textarea>
             <input type="file" id="fileInput" class="file-input" accept="image/*,video/*" />
+            <img id="imagePreview" class="image-preview" style="display: none;" />
             <button class="post-button" onclick="addPost()">Post</button>
         </div>
         
@@ -99,13 +105,28 @@
     </div>
 
     <script>
+        const fileInput = document.getElementById('fileInput');
+        const imagePreview = document.getElementById('imagePreview');
+
+        fileInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.style.display = 'none';
+            }
+        });
+
         function addPost() {
             const textarea = document.getElementById('newPost');
-            const fileInput = document.getElementById('fileInput');
             const postContent = textarea.value;
-            const files = fileInput.files;
 
-            if (postContent.trim() === '' && files.length === 0) {
+            if (postContent.trim() === '' && fileInput.files.length === 0) {
                 alert('Please enter some text or select a file to post.');
                 return;
             }
@@ -127,8 +148,8 @@
                 <div class="post-content">${postContent}</div>
             `;
 
-            if (files.length > 0) {
-                const file = files[0];
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
                 const fileURL = URL.createObjectURL(file);
                 if (file.type.startsWith('image/')) {
                     contentHTML += `<img src="${fileURL}" alt="Post Image" style="max-width: 100%; margin-top: 10px;">`;
@@ -144,6 +165,7 @@
             postContainer.prepend(postDiv); // Add new post at the top
             textarea.value = ''; // Clear the textarea
             fileInput.value = ''; // Clear the file input
+            imagePreview.style.display = 'none'; // Hide the preview
         }
     </script>
 </body>
