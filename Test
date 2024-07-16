@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        .search-bar input {
+            width: 100%;
+            padding: 8px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        nav ul {
+            display: flex;
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+        nav ul li {
+            margin-right: 20px;
+        }
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        main {
+            padding: 20px;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .result {
+            border-bottom: 1px solid #ddd;
+            padding: 10px 0;
+        }
+        .result h2 {
+            margin: 0;
+            font-size: 18px;
+            color: #1a0dab;
+        }
+        .result p {
+            margin: 5px 0 0;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="search-bar">
+            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google Logo">
+            <input type="text" placeholder="Search...">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#">All</a></li>
+                <li><a href="#">Images</a></li>
+                <li><a href="#">Shopping</a></li>
+                <li><a href="#">Videos</a></li>
+                <li><a href="#">News</a></li>
+                <li><a href="#">Maps</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="results">
+            <?php
+            // Sample search results
+            $results = [
+                [
+                    'title' => 'WOW Awards Asia 2024: Announcing the Next Set of Experiential Marketing Awards Jury!',
+                    'source' => 'EVENTFAQS Media',
+                    'time' => '7 hours ago',
+                ],
+                [
+                    'title' => 'Dawa u MLA ka Rajabala wow e 5% neibynta ki Desi Muslim hapoh ka Reservation Policy ka Meghalaya',
+                    'source' => 'Wyrta',
+                    'time' => '7 hours ago',
+                ],
+                [
+                    'title' => 'WOW! Recognized as a Best and Brightest Company to Work For in the Nation for the Seventh Year in a Row',
+                    'source' => 'PR Newswire',
+                    'time' => '2 hours ago',
+                ],
+                [
+                    'title' => 'Emraan Hashmi reveals wife Parveen Shahani’s relatives were apprehensive of his relationship before marriage...',
+                    'source' => 'Bollywood Hungama',
+                    'time' => '2 hours ago',
+                ],
+            ];
+
+            foreach ($results as $result) {
+                echo "<div class='result'>
+                        <h2>{$result['title']}</h2>
+                        <p>{$result['source']} - {$result['time']}</p>
+                    </div>";
+            }
+            ?>
+        </div>
+    </main>
+</body>
+</html>
