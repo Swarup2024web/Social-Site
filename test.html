@@ -27,9 +27,6 @@
             display: flex;
             flex-wrap: wrap;
         }
-        .search-bar .logo span {
-            font-size: 24px;
-        }
         .google-colors {
             color: #4285F4;
         }
@@ -44,32 +41,18 @@
         }
         .search-bar input {
             flex-grow: 1;
-            max-width: 300px; /* Ensure input fits on one line */
+            max-width: 300px;
             padding: 8px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
             margin-left: 10px;
         }
-        nav ul {
-            display: flex;
-            flex-wrap: wrap;
-            list-style: none;
-            padding: 0;
+        nav {
             margin: 10px 0 0;
         }
-        nav ul li {
-            margin-right: 20px;
-        }
-        nav ul li a {
-            text-decoration: none;
-            color: #333;
-        }
-        nav ul li a:hover {
-            text-decoration: underline;
-        }
-        main {
-            padding: 20px;
+        .category-filter {
+            margin-top: 10px;
         }
         .results {
             margin-top: 20px;
@@ -81,11 +64,11 @@
         .result h2 {
             margin: 0;
             font-size: 18px;
-            color: #4285F4; /* Question in blue */
+            color: #4285F4;
         }
         .result p {
             margin: 5px 0 0;
-            color: #000; /* Answer in black */
+            color: #000;
         }
         .pagination {
             display: flex;
@@ -116,14 +99,6 @@
                 margin-top: 10px;
                 width: 100%;
             }
-            nav ul {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            nav ul li {
-                margin-right: 0;
-                margin-bottom: 10px;
-            }
         }
     </style>
 </head>
@@ -141,16 +116,13 @@
             </div>
             <input type="text" id="search-input" placeholder="Search..." onkeyup="search()">
         </div>
-        <nav>
-            <ul>
-                <li><a href="#">All</a></li>
-                <li><a href="#">Images</a></li>
-                <li><a href="#">Shopping</a></li>
-                <li><a href="#">Videos</a></li>
-                <li><a href="#">News</a></li>
-                <li><a href="#">Maps</a></li>
-            </ul>
-        </nav>
+        <div class="category-filter">
+            <button onclick="filterCategory('All')">All</button>
+            <button onclick="filterCategory('English')">English</button>
+            <button onclick="filterCategory('Maths')">Maths</button>
+            <button onclick="filterCategory('History')">History</button>
+            <button onclick="filterCategory('Geography')">Geography</button>
+        </div>
     </header>
 
     <main>
@@ -163,32 +135,23 @@
     </main>
 
     <script>
-        // Sample questions and answers
+        // Sample questions and answers with categories
         const qa = [
-            { question: 'What is the color of milk?', answer: 'The color of milk is white.', description: 'Milk is typically white due to the combination of water, fats, and proteins.' },
-            { question: 'What is the capital of France?', answer: 'The capital of France is Paris.', description: 'Paris, known for its culture and history, is the capital city of France.' },
-            { question: 'How many continents are there?', answer: 'There are seven continents.', description: 'The seven continents are Africa, Antarctica, Asia, Europe, North America, Australia, and South America.' },
-            { question: 'What is the largest ocean?', answer: 'The largest ocean is the Pacific Ocean.', description: 'Covering more than 63 million square miles, the Pacific Ocean is the largest and deepest ocean.' },
-            { question: 'What is the boiling point of water?', answer: 'The boiling point of water is 100°C (212°F).', description: 'At sea level, water boils at 100 degrees Celsius, but this can vary with altitude.' },
-            { question: 'Who wrote "To Kill a Mockingbird"?', answer: 'Harper Lee wrote "To Kill a Mockingbird".', description: 'Published in 1960, it became a classic of modern American literature.' },
-            { question: 'What is the largest planet in our solar system?', answer: 'The largest planet is Jupiter.', description: 'Jupiter is the fifth planet from the Sun and the largest in our solar system.' },
-            { question: 'What is the speed of light?', answer: 'The speed of light is approximately 299,792,458 meters per second.', description: 'This speed is considered a fundamental constant of nature.' },
-            { question: 'Who discovered penicillin?', answer: 'Alexander Fleming discovered penicillin.', description: 'Fleming discovered penicillin in 1928, which led to the development of antibiotics.' },
-            { question: 'What is the square root of 64?', answer: 'The square root of 64 is 8.', description: 'The square root of a number is a value that, when multiplied by itself, gives the original number.' },
-            { question: 'What is the tallest mountain in the world?', answer: 'Mount Everest is the tallest mountain in the world.', description: 'Located in the Himalayas, it has a peak at 8,848 meters above sea level.' },
-            { question: 'What is the chemical symbol for water?', answer: 'The chemical symbol for water is H₂O.', description: 'Water is composed of two hydrogen atoms and one oxygen atom.' },
-            { question: 'Who painted the Mona Lisa?', answer: 'Leonardo da Vinci painted the Mona Lisa.', description: 'The Mona Lisa is one of the most famous paintings in the world.' },
-            { question: 'What is the longest river in the world?', answer: 'The Nile is considered the longest river in the world.', description: 'The Nile river flows through northeastern Africa and is about 6,650 kilometers long.' },
-            { question: 'Who is the author of "1984"?', answer: 'George Orwell is the author of "1984".', description: 'Published in 1949, "1984" is a dystopian novel set in a totalitarian society.' },
-            { question: 'What is the smallest country in the world?', answer: 'The smallest country in the world is Vatican City.', description: 'Vatican City is an independent city-state enclaved within Rome, Italy.' },
-            { question: 'What is the hardest natural substance on Earth?', answer: 'Diamond is the hardest natural substance on Earth.', description: 'Diamonds are formed under high-pressure and high-temperature conditions in the Earth’s mantle.' },
-            { question: 'Who developed the theory of relativity?', answer: 'Albert Einstein developed the theory of relativity.', description: 'Einstein’s theory of relativity revolutionized the understanding of space, time, and gravity.' },
-            { question: 'What is the primary language spoken in Brazil?', answer: 'Portuguese is the primary language spoken in Brazil.', description: 'Brazil is the largest country in South America and the only one where Portuguese is the official language.' },
-            { question: 'What is the currency of Japan?', answer: 'The currency of Japan is Yen.', description: 'The yen is the official currency of Japan and is symbolized by ¥.' }
+            { question: 'What is the color of milk?', answer: 'The color of milk is white.', description: 'Milk is typically white due to the combination of water, fats, and proteins.', category: 'Science' },
+            { question: 'What is the capital of France?', answer: 'The capital of France is Paris.', description: 'Paris is known for its culture and history.', category: 'Geography' },
+            { question: 'How many continents are there?', answer: 'There are seven continents.', description: 'The seven continents are Africa, Antarctica, Asia, Europe, North America, Australia, and South America.', category: 'Geography' },
+            { question: 'What is the boiling point of water?', answer: 'The boiling point of water is 100°C (212°F).', description: 'At sea level, water boils at 100 degrees Celsius.', category: 'Science' },
+            { question: 'Who wrote "To Kill a Mockingbird"?', answer: 'Harper Lee wrote "To Kill a Mockingbird".', description: 'Published in 1960, it became a classic of modern American literature.', category: 'English' },
+            { question: 'What is the largest planet in our solar system?', answer: 'The largest planet is Jupiter.', description: 'Jupiter is the fifth planet from the Sun.', category: 'Science' },
+            { question: 'What is the speed of light?', answer: 'The speed of light is approximately 299,792,458 meters per second.', description: 'This speed is considered a fundamental constant of nature.', category: 'Science' },
+            { question: 'What is the square root of 64?', answer: 'The square root of 64 is 8.', description: 'The square root of a number is a value that, when multiplied by itself, gives the original number.', category: 'Maths' },
+            { question: 'Who developed the theory of relativity?', answer: 'Albert Einstein developed the theory of relativity.', description: 'Einstein’s theory revolutionized the understanding of space, time, and gravity.', category: 'History' },
+            { question: 'What is the smallest country in the world?', answer: 'The smallest country in the world is Vatican City.', description: 'Vatican City is an independent city-state enclaved within Rome, Italy.', category: 'Geography' }
         ];
 
         const resultsPerPage = 10;
         let currentPage = 1;
+        let filteredResults = qa;
 
         function displayResults(page) {
             const startIndex = (page - 1) * resultsPerPage;
@@ -196,8 +159,8 @@
             const resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = '';
 
-            for (let i = startIndex; i < endIndex && i < qa.length; i++) {
-                const result = qa[i];
+            for (let i = startIndex; i < endIndex && i < filteredResults.length; i++) {
+                const result = filteredResults[i];
                 const resultDiv = document.createElement('div');
                 resultDiv.classList.add('result');
                 resultDiv.innerHTML = `
@@ -212,7 +175,7 @@
         function createPagination() {
             const paginationDiv = document.getElementById('pagination');
             paginationDiv.innerHTML = '';
-            const totalPages = Math.ceil(qa.length / resultsPerPage);
+            const totalPages = Math.ceil(filteredResults.length / resultsPerPage);
 
             for (let i = 1; i <= totalPages; i++) {
                 const button = document.createElement('button');
@@ -231,9 +194,24 @@
 
         function search() {
             const query = document.getElementById('search-input').value.toLowerCase();
-            const filteredResults = qa.filter(item => item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query));
-            displayResults(1, filteredResults);
-            createPagination(filteredResults);
+            filteredResults = qa.filter(item => 
+                item.question.toLowerCase().includes(query) || 
+                item.answer.toLowerCase().includes(query)
+            );
+            currentPage = 1;
+            displayResults(currentPage);
+            createPagination();
+        }
+
+        function filterCategory(category) {
+            if (category === 'All') {
+                filteredResults = qa;
+            } else {
+                filteredResults = qa.filter(item => item.category === category);
+            }
+            currentPage = 1;
+            displayResults(currentPage);
+            createPagination();
         }
 
         // Initial display
