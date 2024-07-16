@@ -22,7 +22,7 @@
             flex-wrap: wrap;
         }
         .search-bar .logo {
-            font-size: 24px;
+            font-size: 32px; /* Increased font size */
             font-weight: bold;
             display: flex;
             flex-wrap: wrap;
@@ -41,7 +41,8 @@
         }
         .search-bar input {
             flex-grow: 1;
-            max-width: 300px;
+            width: 100%; /* Full width */
+            max-width: 400px; /* Adjusted max-width */
             padding: 8px;
             font-size: 16px;
             border: 1px solid #ddd;
@@ -53,6 +54,18 @@
         }
         .category-filter {
             margin-top: 10px;
+        }
+        .category-filter button {
+            margin-right: 5px;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            background-color: #007bff; /* Button color */
+            cursor: pointer;
+        }
+        .category-filter button:hover {
+            background-color: #0056b3; /* Darker shade on hover */
         }
         .results {
             margin-top: 20px;
@@ -122,6 +135,7 @@
             <button onclick="filterCategory('Maths')">Maths</button>
             <button onclick="filterCategory('History')">History</button>
             <button onclick="filterCategory('Geography')">Geography</button>
+            <button onclick="filterCategory('Science')">Science</button>
         </div>
     </header>
 
@@ -167,6 +181,7 @@
                     <h2>${result.question}</h2>
                     <p>${result.answer}</p>
                     <p>${result.description}</p>
+                    <p><strong>Category:</strong> ${result.category}</p>
                 `;
                 resultsDiv.appendChild(resultDiv);
             }
