@@ -86,40 +86,52 @@
     </header>
 
     <main>
-        <div class="results">
-            <?php
-            // Sample search results
-            $results = [
-                [
-                    'title' => 'WOW Awards Asia 2024: Announcing the Next Set of Experiential Marketing Awards Jury!',
-                    'source' => 'EVENTFAQS Media',
-                    'time' => '7 hours ago',
-                ],
-                [
-                    'title' => 'Dawa u MLA ka Rajabala wow e 5% neibynta ki Desi Muslim hapoh ka Reservation Policy ka Meghalaya',
-                    'source' => 'Wyrta',
-                    'time' => '7 hours ago',
-                ],
-                [
-                    'title' => 'WOW! Recognized as a Best and Brightest Company to Work For in the Nation for the Seventh Year in a Row',
-                    'source' => 'PR Newswire',
-                    'time' => '2 hours ago',
-                ],
-                [
-                    'title' => 'Emraan Hashmi reveals wife Parveen Shahani’s relatives were apprehensive of his relationship before marriage...',
-                    'source' => 'Bollywood Hungama',
-                    'time' => '2 hours ago',
-                ],
-            ];
-
-            foreach ($results as $result) {
-                echo "<div class='result'>
-                        <h2>{$result['title']}</h2>
-                        <p>{$result['source']} - {$result['time']}</p>
-                    </div>";
-            }
-            ?>
+        <div class="results" id="results">
+            <!-- Search results will be injected here by JavaScript -->
         </div>
     </main>
+
+    <script>
+        // Sample search results
+        const results = [
+            {
+                title: 'WOW Awards Asia 2024: Announcing the Next Set of Experiential Marketing Awards Jury!',
+                source: 'EVENTFAQS Media',
+                time: '7 hours ago',
+            },
+            {
+                title: 'Dawa u MLA ka Rajabala wow e 5% neibynta ki Desi Muslim hapoh ka Reservation Policy ka Meghalaya',
+                source: 'Wyrta',
+                time: '7 hours ago',
+            },
+            {
+                title: 'WOW! Recognized as a Best and Brightest Company to Work For in the Nation for the Seventh Year in a Row',
+                source: 'PR Newswire',
+                time: '2 hours ago',
+            },
+            {
+                title: 'Emraan Hashmi reveals wife Parveen Shahani’s relatives were apprehensive of his relationship before marriage...',
+                source: 'Bollywood Hungama',
+                time: '2 hours ago',
+            },
+        ];
+
+        // Function to display results
+        function displayResults() {
+            const resultsContainer = document.getElementById('results');
+            results.forEach(result => {
+                const resultDiv = document.createElement('div');
+                resultDiv.className = 'result';
+                resultDiv.innerHTML = `
+                    <h2>${result.title}</h2>
+                    <p>${result.source} - ${result.time}</p>
+                `;
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+        // Call the function to display results
+        displayResults();
+    </script>
 </body>
 </html>
