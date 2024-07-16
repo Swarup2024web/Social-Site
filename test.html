@@ -18,12 +18,12 @@
         .search-bar {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             flex-wrap: wrap;
         }
         .search-bar .logo {
             font-size: 24px;
             font-weight: bold;
-            margin-right: 10px;
             display: flex;
             flex-wrap: wrap;
         }
@@ -44,12 +44,12 @@
         }
         .search-bar input {
             width: 100%;
-            max-width: 400px;
+            max-width: 300px; /* Decreased size */
             padding: 8px;
             font-size: 16px;
             border: 1px solid #ddd;
             border-radius: 4px;
-            margin-top: 10px;
+            margin-left: auto; /* Keep input to the right */
         }
         nav ul {
             display: flex;
