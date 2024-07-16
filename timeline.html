@@ -67,6 +67,10 @@
             resize: none;
         }
 
+        .file-input {
+            margin-top: 10px;
+        }
+
         .post-button {
             margin-top: 10px;
             padding: 10px 15px;
@@ -87,6 +91,7 @@
     <div class="timeline-container">
         <div class="create-post">
             <textarea id="newPost" placeholder="What's on your mind?"></textarea>
+            <input type="file" id="fileInput" class="file-input" accept="image/*,video/*" />
             <button class="post-button" onclick="addPost()">Post</button>
         </div>
         
@@ -96,10 +101,12 @@
     <script>
         function addPost() {
             const textarea = document.getElementById('newPost');
+            const fileInput = document.getElementById('fileInput');
             const postContent = textarea.value;
+            const files = fileInput.files;
 
-            if (postContent.trim() === '') {
-                alert('Please enter some text to post.');
+            if (postContent.trim() === '' && files.length === 0) {
+                alert('Please enter some text or select a file to post.');
                 return;
             }
 
@@ -107,7 +114,7 @@
             const postDiv = document.createElement('div');
             postDiv.classList.add('timeline-post');
 
-            postDiv.innerHTML = `
+            let contentHTML = `
                 <div class="post-header">
                     <div class="profile-picture">
                         <i class="fas fa-user-circle"></i>
@@ -120,8 +127,23 @@
                 <div class="post-content">${postContent}</div>
             `;
 
+            if (files.length > 0) {
+                const file = files[0];
+                const fileURL = URL.createObjectURL(file);
+                if (file.type.startsWith('image/')) {
+                    contentHTML += `<img src="${fileURL}" alt="Post Image" style="max-width: 100%; margin-top: 10px;">`;
+                } else if (file.type.startsWith('video/')) {
+                    contentHTML += `<video controls style="max-width: 100%; margin-top: 10px;">
+                        <source src="${fileURL}" type="${file.type}">
+                        Your browser does not support the video tag.
+                    </video>`;
+                }
+            }
+
+            postDiv.innerHTML = contentHTML;
             postContainer.prepend(postDiv); // Add new post at the top
             textarea.value = ''; // Clear the textarea
+            fileInput.value = ''; // Clear the file input
         }
     </script>
 </body>
