@@ -19,9 +19,22 @@
             display: flex;
             align-items: center;
         }
-        .search-bar img {
-            height: 30px;
+        .search-bar .logo {
+            font-size: 30px;
+            font-weight: bold;
             margin-right: 10px;
+        }
+        .google-colors {
+            color: #4285F4;
+        }
+        .google-colors:nth-child(2) {
+            color: #EA4335;
+        }
+        .google-colors:nth-child(3) {
+            color: #FBBC05;
+        }
+        .google-colors:nth-child(4) {
+            color: #34A853;
         }
         .search-bar input {
             width: 100%;
@@ -59,19 +72,27 @@
         .result h2 {
             margin: 0;
             font-size: 18px;
-            color: #1a0dab;
+            color: #4285F4; /* Question in blue */
         }
         .result p {
             margin: 5px 0 0;
-            color: #555;
+            color: #000; /* Answer in black */
         }
     </style>
 </head>
 <body>
     <header>
         <div class="search-bar">
-            <img src="https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" alt="Google Logo">
-            <input type="text" placeholder="Search...">
+            <div class="logo">
+                <span class="google-colors">S</span>
+                <span class="google-colors">a</span>
+                <span class="google-colors">n</span>
+                <span class="google-colors">d</span>
+                <span class="google-colors">h</span>
+                <span class="google-colors">a</span>
+                <span class="google-colors">n</span>
+            </div>
+            <input type="text" id="search-input" placeholder="Search..." onkeyup="search()">
         </div>
         <nav>
             <ul>
@@ -92,46 +113,52 @@
     </main>
 
     <script>
-        // Sample search results
-        const results = [
+        // Sample questions and answers
+        const qa = [
             {
-                title: 'WOW Awards Asia 2024: Announcing the Next Set of Experiential Marketing Awards Jury!',
-                source: 'EVENTFAQS Media',
-                time: '7 hours ago',
+                question: 'What is the color of milk?',
+                answer: 'The color of milk is white.',
             },
             {
-                title: 'Dawa u MLA ka Rajabala wow e 5% neibynta ki Desi Muslim hapoh ka Reservation Policy ka Meghalaya',
-                source: 'Wyrta',
-                time: '7 hours ago',
+                question: 'What is the capital of France?',
+                answer: 'The capital of France is Paris.',
             },
             {
-                title: 'WOW! Recognized as a Best and Brightest Company to Work For in the Nation for the Seventh Year in a Row',
-                source: 'PR Newswire',
-                time: '2 hours ago',
+                question: 'How many continents are there?',
+                answer: 'There are seven continents.',
             },
             {
-                title: 'Emraan Hashmi reveals wife Parveen Shahani’s relatives were apprehensive of his relationship before marriage...',
-                source: 'Bollywood Hungama',
-                time: '2 hours ago',
+                question: 'What is the largest ocean?',
+                answer: 'The largest ocean is the Pacific Ocean.',
             },
         ];
 
         // Function to display results
-        function displayResults() {
+        function displayResults(results) {
             const resultsContainer = document.getElementById('results');
-            results.forEach(result => {
+            resultsContainer.innerHTML = ''; // Clear previous results
+            results.forEach(item => {
                 const resultDiv = document.createElement('div');
                 resultDiv.className = 'result';
                 resultDiv.innerHTML = `
-                    <h2>${result.title}</h2>
-                    <p>${result.source} - ${result.time}</p>
+                    <h2>${item.question}</h2>
+                    <p>${item.answer}</p>
                 `;
                 resultsContainer.appendChild(resultDiv);
             });
         }
 
-        // Call the function to display results
-        displayResults();
+        // Function to handle search
+        function search() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            const filteredResults = qa.filter(item => 
+                item.question.toLowerCase().includes(query) || item.answer.toLowerCase().includes(query)
+            );
+            displayResults(filteredResults);
+        }
+
+        // Initial display of all results
+        displayResults(qa);
     </script>
 </body>
 </html>
