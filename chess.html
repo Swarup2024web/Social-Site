@@ -27,6 +27,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 36px;
         }
 
         .white {
@@ -35,6 +36,10 @@
 
         .black {
             background-color: #b58863;
+        }
+
+        .piece {
+            cursor: pointer;
         }
     </style>
 </head>
@@ -46,10 +51,13 @@
             const letters = 'abcdefgh';
             const numbers = '87654321';
 
+            // Create the board
             for (let i = 0; i < 8; i++) {
                 for (let j = 0; j < 8; j++) {
                     const square = document.createElement('div');
                     square.classList.add('square');
+                    square.id = letters[j] + numbers[i];
+                    square.dataset.position = letters[j] + numbers[i];
 
                     if ((i + j) % 2 === 0) {
                         square.classList.add('white');
@@ -57,8 +65,66 @@
                         square.classList.add('black');
                     }
 
-                    square.dataset.position = letters[j] + numbers[i];
                     chessboard.appendChild(square);
+                }
+            }
+
+            // Initial piece positions
+            const initialPositions = {
+                a8: '♜', b8: '♞', c8: '♝', d8: '♛', e8: '♚', f8: '♝', g8: '♞', h8: '♜',
+                a7: '♟', b7: '♟', c7: '♟', d7: '♟', e7: '♟', f7: '♟', g7: '♟', h7: '♟',
+                a2: '♙', b2: '♙', c2: '♙', d2: '♙', e2: '♙', f2: '♙', g2: '♙', h2: '♙',
+                a1: '♖', b1: '♘', c1: '♗', d1: '♕', e1: '♔', f1: '♗', g1: '♘', h1: '♖'
+            };
+
+            for (const position in initialPositions) {
+                const piece = document.createElement('span');
+                piece.innerText = initialPositions[position];
+                piece.classList.add('piece');
+                piece.draggable = true;
+                piece.dataset.position = position;
+
+                piece.addEventListener('dragstart', dragStart);
+                piece.addEventListener('dragend', dragEnd);
+
+                document.getElementById(position).appendChild(piece);
+            }
+
+            const squares = document.querySelectorAll('.square');
+            squares.forEach(square => {
+                square.addEventListener('dragover', dragOver);
+                square.addEventListener('drop', drop);
+            });
+
+            let draggedPiece = null;
+
+            function dragStart(event) {
+                draggedPiece = event.target;
+                setTimeout(() => {
+                    draggedPiece.style.display = 'none';
+                }, 0);
+            }
+
+            function dragEnd(event) {
+                setTimeout(() => {
+                    draggedPiece.style.display = 'block';
+                    draggedPiece = null;
+                }, 0);
+            }
+
+            function dragOver(event) {
+                event.preventDefault();
+            }
+
+            function drop(event) {
+                event.preventDefault();
+                const targetSquare = event.target;
+
+                // Ensure we are dropping onto a square, not a piece
+                if (targetSquare.classList.contains('square')) {
+                    targetSquare.appendChild(draggedPiece);
+                    const newPosition = targetSquare.dataset.position;
+                    draggedPiece.dataset.position = newPosition;
                 }
             }
         });
