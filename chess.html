@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chess Game</title>
+    <link rel="stylesheet" href="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.css">
     <style>
         body {
             display: flex;
@@ -13,121 +14,75 @@
             margin: 0;
             background-color: #f0f0f0;
         }
-
-        #chessboard {
-            display: grid;
-            grid-template-columns: repeat(8, 50px);
-            grid-template-rows: repeat(8, 50px);
-            border: 2px solid #333;
-        }
-
-        .square {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 36px;
-        }
-
-        .white {
-            background-color: #f0d9b5;
-        }
-
-        .black {
-            background-color: #b58863;
-        }
-
-        .piece {
-            cursor: pointer;
+        #board {
+            width: 400px;
         }
     </style>
 </head>
 <body>
-    <div id="chessboard"></div>
+    <div id="board"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.11.0/chess.min.js"></script>
+    <script src="https://unpkg.com/chessboardjs@1.0.0/dist/chessboard-1.0.0.min.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chessboard = document.getElementById('chessboard');
-            const letters = 'abcdefgh';
-            const numbers = '87654321';
+        var board = null;
+        var game = new Chess();
 
-            // Create the board
-            for (let i = 0; i < 8; i++) {
-                for (let j = 0; j < 8; j++) {
-                    const square = document.createElement('div');
-                    square.classList.add('square');
-                    square.id = letters[j] + numbers[i];
-                    square.dataset.position = letters[j] + numbers[i];
-
-                    if ((i + j) % 2 === 0) {
-                        square.classList.add('white');
-                    } else {
-                        square.classList.add('black');
-                    }
-
-                    chessboard.appendChild(square);
-                }
+        function onDragStart(source, piece, position, orientation) {
+            if (game.in_checkmate() === true || game.in_draw() === true ||
+                piece.search(/^b/) !== -1) {
+                return false;
             }
+        }
 
-            // Initial piece positions
-            const initialPositions = {
-                a8: '♜', b8: '♞', c8: '♝', d8: '♛', e8: '♚', f8: '♝', g8: '♞', h8: '♜',
-                a7: '♟', b7: '♟', c7: '♟', d7: '♟', e7: '♟', f7: '♟', g7: '♟', h7: '♟',
-                a2: '♙', b2: '♙', c2: '♙', d2: '♙', e2: '♙', f2: '♙', g2: '♙', h2: '♙',
-                a1: '♖', b1: '♘', c1: '♗', d1: '♕', e1: '♔', f1: '♗', g1: '♘', h1: '♖'
-            };
-
-            for (const position in initialPositions) {
-                const piece = document.createElement('span');
-                piece.innerText = initialPositions[position];
-                piece.classList.add('piece');
-                piece.draggable = true;
-                piece.dataset.position = position;
-
-                piece.addEventListener('dragstart', dragStart);
-                piece.addEventListener('dragend', dragEnd);
-
-                document.getElementById(position).appendChild(piece);
-            }
-
-            const squares = document.querySelectorAll('.square');
-            squares.forEach(square => {
-                square.addEventListener('dragover', dragOver);
-                square.addEventListener('drop', drop);
+        function onDrop(source, target) {
+            var move = game.move({
+                from: source,
+                to: target,
+                promotion: 'q' // promote to queen
             });
 
-            let draggedPiece = null;
+            if (move === null) {
+                return 'snapback';
+            }
+            updateStatus();
+        }
 
-            function dragStart(event) {
-                draggedPiece = event.target;
-                setTimeout(() => {
-                    draggedPiece.style.display = 'none';
-                }, 0);
+        function onSnapEnd() {
+            board.position(game.fen());
+        }
+
+        function updateStatus() {
+            var status = '';
+
+            var moveColor = 'White';
+            if (game.turn() === 'b') {
+                moveColor = 'Black';
             }
 
-            function dragEnd(event) {
-                setTimeout(() => {
-                    draggedPiece.style.display = 'block';
-                    draggedPiece = null;
-                }, 0);
-            }
+            if (game.in_checkmate() === true) {
+                status = 'Game over, ' + moveColor + ' is in checkmate.';
+            } else if (game.in_draw() === true) {
+                status = 'Game over, drawn position';
+            } else {
+                status = moveColor + ' to move';
 
-            function dragOver(event) {
-                event.preventDefault();
-            }
-
-            function drop(event) {
-                event.preventDefault();
-                const targetSquare = event.target;
-
-                // Ensure we are dropping onto a square, not a piece
-                if (targetSquare.classList.contains('square')) {
-                    targetSquare.appendChild(draggedPiece);
-                    const newPosition = targetSquare.dataset.position;
-                    draggedPiece.dataset.position = newPosition;
+                if (game.in_check() === true) {
+                    status += ', ' + moveColor + ' is in check';
                 }
             }
-        });
+            console.log(status);
+        }
+
+        var config = {
+            draggable: true,
+            position: 'start',
+            onDragStart: onDragStart,
+            onDrop: onDrop,
+            onSnapEnd: onSnapEnd
+        };
+
+        board = Chessboard('board', config);
+        updateStatus();
     </script>
 </body>
 </html>
